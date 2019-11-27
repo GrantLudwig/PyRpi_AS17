@@ -6,11 +6,11 @@ class Ghost:
     GhostShape = (  (0, 0, 1, 1, 1, 1, 1, 1, 1, 0), 
                     (0, 1, 1, 1, 1, 1, 1, 1, 1, 1),
                     (1, 1, 2, 2, 1, 1, 1, 1, 1, 0),
-                    (1, 1, 3, 2, 1, 1, 1, 1, 1, 1), 
+                    (1, 1, 2, 2, 1, 1, 1, 1, 1, 1), 
                     (1, 1, 1, 1, 1, 1, 1, 1, 1, 0),
                     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
                     (1, 1, 2, 2, 1, 1, 1, 1, 1, 0),
-                    (1, 1, 3, 2, 1, 1, 1, 1, 1, 1),
+                    (1, 1, 2, 2, 1, 1, 1, 1, 1, 1),
                     (0, 1, 1, 1, 1, 1, 1, 1, 1, 0),
                     (0, 0, 1, 1, 1, 1, 1, 1, 1, 1))
                 
@@ -18,13 +18,18 @@ class Ghost:
     GhostShape2 = ( (0, 0, 1, 1, 1, 1, 1, 1, 1, 1), 
                     (0, 1, 1, 1, 1, 1, 1, 1, 1, 0),
                     (1, 1, 2, 2, 1, 1, 1, 1, 1, 1),
-                    (1, 1, 3, 2, 1, 1, 1, 1, 1, 0), 
+                    (1, 1, 2, 2, 1, 1, 1, 1, 1, 0), 
                     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
                     (1, 1, 1, 1, 1, 1, 1, 1, 1, 0),
                     (1, 1, 2, 2, 1, 1, 1, 1, 1, 1),
-                    (1, 1, 3, 2, 1, 1, 1, 1, 1, 0),
+                    (1, 1, 2, 2, 1, 1, 1, 1, 1, 0),
                     (0, 1, 1, 1, 1, 1, 1, 1, 1, 1),
                     (0, 0, 1, 1, 1, 1, 1, 1, 1, 0))
+                    
+    EyeLowerLeft = ((0,1),(0,0))
+    EyeLowerRight = ((1,0),(0,0))
+    EyeUpperLeft = ((0,0),(0,1))
+    EyeUpperRight = ((0,0),(1,0))
                     
     PIXEL_SIZE = 10
 
@@ -48,10 +53,10 @@ class Ghost:
                     self.Ghost[i][j].setFill(self.Color)
                     self.Ghost[i][j].draw(self.win)
                 elif self.GhostShape[i][j] == 2:
-                    self.Ghost[i][j].setFill("White")
-                    self.Ghost[i][j].draw(self.win)
-                elif self.GhostShape[i][j] == 3:
-                    self.Ghost[i][j].setFill("Black")
+                    if self.EyeUpperRight[i%2][j%2] == 1:
+                        self.Ghost[i][j].setFill("Black")
+                    else:
+                        self.Ghost[i][j].setFill("White")
                     self.Ghost[i][j].draw(self.win)
                     
         for i in range(len(self.GhostShape2[0])):
@@ -62,9 +67,44 @@ class Ghost:
                 if self.GhostShape2[i][j] == 1:
                     self.Ghost2[i][j].setFill(self.Color)
                 elif self.GhostShape2[i][j] == 2:
-                    self.Ghost2[i][j].setFill("White")
-                elif self.GhostShape2[i][j] == 3:
-                    self.Ghost2[i][j].setFill("Black")
+                    if self.EyeUpperRight[i%2][j%2] == 1:
+                        self.Ghost2[i][j].setFill("Black")
+                    else:
+                        self.Ghost2[i][j].setFill("White")
+                        
+    # 0 is upper right, 1 it lower right, etc.
+    def SetEyeDirection(self, num):
+        for i in range(len(self.GhostShape[0])):
+            for j in range(len(self.GhostShape)):
+                if self.GhostShape2[i][j] == 2:
+                    if num == 0:
+                        if self.EyeUpperRight[i%2][j%2] == 1:
+                            self.Ghost[i][j].setFill("Black")
+                            self.Ghost2[i][j].setFill("Black")
+                        else:
+                            self.Ghost[i][j].setFill("White")
+                            self.Ghost2[i][j].setFill("White")
+                    elif num == 1:
+                        if self.EyeLowerRight[i%2][j%2] == 1:
+                            self.Ghost[i][j].setFill("Black")
+                            self.Ghost2[i][j].setFill("Black")
+                        else:
+                            self.Ghost[i][j].setFill("White")
+                            self.Ghost2[i][j].setFill("White")
+                    elif num == 2:
+                        if self.EyeLowerLeft[i%2][j%2] == 1:
+                            self.Ghost[i][j].setFill("Black")
+                            self.Ghost2[i][j].setFill("Black")
+                        else:
+                            self.Ghost[i][j].setFill("White")
+                            self.Ghost2[i][j].setFill("White")
+                    elif num == 3:
+                        if self.EyeUpperLeft[i%2][j%2] == 1:
+                            self.Ghost[i][j].setFill("Black")
+                            self.Ghost2[i][j].setFill("Black")
+                        else:
+                            self.Ghost[i][j].setFill("White")
+                            self.Ghost2[i][j].setFill("White")
                     
     def Animate(self):
         for i in range(len(self.GhostShape[0])):
