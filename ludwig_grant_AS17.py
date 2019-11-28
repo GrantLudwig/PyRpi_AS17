@@ -15,23 +15,31 @@ import random
 WIN_HEIGHT = 800
 WIN_WIDTH = 800
 PIXEL_SIZE = 10
-EYE_TIMER = 1
+SKIRT_TIMER = .2
 
 win = GraphWin("GraphicsWindow", WIN_WIDTH, WIN_HEIGHT, autoflush=False)
 win.setBackground("grey")
            
-Pinky = Ghost("pink", 100, 100, win)
-Blinky = Ghost("Red", 0, 0, win)
+ghosts = []
+ghosts.append(Ghost("pink", 100, 50, -4, 3, win))
+ghosts.append(Ghost("Red", 0, 0, 5, 7, win))
+ghosts.append(Ghost("Blue", 400, 400, 5, -6, win))
+ghosts.append(Ghost("Orange", 750, 600, -1, -4, win))
 
-changeTime = time.time() + EYE_TIMER
+changeTime = time.time() + SKIRT_TIMER
 while(True):
-    # if changeTime - time.time() < 0:
-        # Pinky.SetEyeDirection(random.randint(0,4))
-        # Blinky.SetEyeDirection(random.randint(0,4))
-        # changeTime = time.time() + EYE_TIMER
-        
-    Pinky.SetEyeDirection(random.randint(0,4))
-    Blinky.SetEyeDirection(random.randint(0,4))
-    Pinky.Animate()
-    Blinky.Animate()
-    update(5)
+    for g in ghosts:
+        if g.GetX() <= 0:
+            g.xDir = abs(g.xDir)
+        elif g.GetX() >= WIN_WIDTH:
+            g.xDir = -abs(g.xDir)
+        if g.GetY() <= 0:
+            g.yDir = abs(g.yDir)
+        elif g.GetY() >= WIN_HEIGHT:
+            g.yDir = -abs(g.yDir)
+        g.Move()
+    if changeTime - time.time() < 0:
+        for g in ghosts:
+            g.Animate()
+            changeTime = time.time() + SKIRT_TIMER
+    update(60)
